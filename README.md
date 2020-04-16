@@ -28,8 +28,8 @@ If you want to print the stored blocks run "python3 script.py -p"
  
  
 # DEVELOPED BY:
-   PEDRO GRAND \n
-   RAIMUNDO MARIN \n
-   JUAN RODRIGUEZ \n
+   PEDRO GRAND  
+   RAIMUNDO MARIN  
+   JUAN RODRIGUEZ  
 
 
