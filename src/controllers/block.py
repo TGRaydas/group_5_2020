@@ -38,11 +38,19 @@ class Block:
             return("Your option was not valid")
 
     def block_grade(self, mineral_name):
-        option = input('The mass name came in: \n[1] Percent\n[2] Tons')
+        option = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG')
         if option == "1"
-            pass
+            self.to_json()[mineral_name]
         elif option == "2":
-            pass
+            block_mass_value = self.block_mass()
+            if block_mass_value == "Your option was not valid":
+                return False
+            return((self.to_json()[mineral_name]/(block_mass_value*1000))*100)
+        elif option == "3":
+            block_mass_value = self.block_mass()
+            if block_mass_value == "Your option was not valid":
+                return False
+            return(100*(self.to_json()[mineral_name]/(block_mass_value)))
 
     def block_attribute(self, attribute):
         if attribute not in self.block_columns:
