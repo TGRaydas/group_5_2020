@@ -43,8 +43,6 @@ class Block:
                 attibutes.append(block[value])
             return Block(*attributes)#* hace que un arreglo se vuelva var1, var2, sirve para que no se pase un arreglo, y pase cada variable
         return False 
-    def number_of_blocks:
-        return blocks.count()
 
     def block_mass(self, x, y, z):
         #find the block
