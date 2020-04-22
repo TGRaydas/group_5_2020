@@ -1,10 +1,7 @@
 import pymongo
 import json
 from block import Block
-
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["maclaughlin"]
-blocks = mydb["blocks"]
+from dbProvider import DBProvider
 
 
 class Mine:
@@ -14,14 +11,16 @@ class Mine:
 	def mine_blocks(self):
         return len(blocks.find({}))
 
-    def find_block_in_db(self, x, y, z):
+    def find_block(self, x, y, z):
         block = blocks.find_one({"x":x, "y" : y, "z" : z})
         if (block != None):
-            return block
+            return Block(block.keys(), block.values())
         return False 
 
     def grade_in_percent(self, x, y, z, mineral):
         pass
 
-    def mass_in_kg(self, x, y, z):
+    def mass_in_kg(self, x, y, z, mass_column_name):
+        block = self.find_block(self, x, y ,z)
+        block.
         pass
