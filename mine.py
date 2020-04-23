@@ -9,7 +9,8 @@ class Mine:
         self.name = name
 
     def mine_blocks(self, blocks):
-        return len(blocks.find({}))
+        a = blocks.count()
+        return a
 
     def find_block(self, x, y, z, blocks):
         block = blocks.find_one({"x":x, "y" : y, "z" : z})

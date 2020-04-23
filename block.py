@@ -1,8 +1,4 @@
 import json
-from dbProvider import DBProvider
-
-#blocks = DBProvider.select_collection(name)
-
 
 class Block():
     def __init__(self, block_columns, block_data):
@@ -11,8 +7,10 @@ class Block():
 
     def to_json(self):
         block_json = {}
+        col_key = list(self.block_columns)
+        col_data = list(self.block_data)
         for column_index in range(len(self.block_columns)):
-            block_json[self.block_columns[column_index]] = self.block_data[column_index]
+            block_json[col_key[column_index]] = col_data[column_index]
         return(block_json)
 
     def save_in_database(self, blocks):
@@ -28,7 +26,7 @@ class Block():
         block_json = self.to_json()
         mass_name = input("Enter the name of mass column: ")
         if mass_name not in block_json.keys():
-            return("The name of mass column was not valid")
+            return("The name of mass column was not valid (should be mass)")
         weight_name = input("[1]KG \n[2] TONS")
         if weight_name == "1":
             return(block_json["mass"])
