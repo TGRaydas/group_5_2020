@@ -11,11 +11,11 @@ class Mine:
         self.name = name
 
     def mine_blocks(self, blocks):
-        a = blocks.count()
-        return a
+        blocks_count = blocks.count()
+        return blocks_count
 
-    def find_block(self, x, y, z, blocks):
-        block = blocks.find_one({"x":x, "y" : y, "z" : z})
+    def find_block(self, x, y, z, collection):
+        block = collection.find_one({"x":x, "y" : y, "z" : z})
         if (block != None):
             return Block(block.keys(), block.values())
         return False 

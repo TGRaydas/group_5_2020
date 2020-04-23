@@ -14,11 +14,11 @@ class Block():
         return(block_json)
     def get_key_values(self):
         return list(self.block_columns)
-    def save_in_database(self, blocks):
-        block = blocks.find_one({"x":self.block_data[1],"y":self.block_data[2],"z":self.block_data[3]})
+    def save_in_database(self, collections):
+        block = collections.find_one({"x":self.block_data[1],"y":self.block_data[2],"z":self.block_data[3]})
         if block != None:
             return
-        blocks.insert_one(self.to_json())
+        collections.insert_one(self.to_json())
 
     def print_block(self):
         print(self.to_json())
@@ -28,7 +28,7 @@ class Block():
         mass_name = input("Enter the name of mass column: ")
         if mass_name not in block_json.keys():
             return("The name of mass column was not valid (should be mass)")
-        weight_name = input("[1]KG \n[2] TONS")
+        weight_name = input("[1]KG \n[2]TONS\n")
         if weight_name == "1":
             return(block_json[mass_name])
         elif weight_name == "2":
@@ -37,7 +37,7 @@ class Block():
             return("Your option was not valid")
 
     def block_grade(self, mineral_name):
-        option = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG')
+        option = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG\n')
         if option == "1":
             self.to_json()[mineral_name]
         elif option == "2":
@@ -54,4 +54,8 @@ class Block():
     def block_attribute(self, attribute):
         if attribute not in self.block_columns:
             return("Not valid attribute")
-        return(attribute, self.to_json()[attribute])
+        return_attributes = {}
+        for key in self.to_json().keys():
+            if key != attribute and key != "_id":
+                return_attributes[key] = self.to_json()[key]
+        return(return_attributes)
