@@ -32,7 +32,7 @@ class Block():
         if weight_name == "1":
             return(block_json[mass_name])
         elif weight_name == "2":
-            return(block_json[mass_name]/1000)
+            return(float(block_json[mass_name])/1000)
         else:
             return("Your option was not valid")
 
@@ -44,12 +44,12 @@ class Block():
             block_mass_value = self.block_mass()
             if block_mass_value == "Your option was not valid":
                 return False
-            return((self.to_json()[mineral_name]/(block_mass_value*1000))*100)
+            return((float(self.to_json()[mineral_name])/(float(block_mass_value)*1000))*100)
         elif option == "3":
             block_mass_value = self.block_mass()
             if block_mass_value == "Your option was not valid":
                 return False
-            return(100*(self.to_json()[mineral_name]/(block_mass_value)))
+            return(100*(float(self.to_json()[mineral_name])/float(block_mass_value)))
 
     def block_attribute(self, attribute):
         if attribute not in self.block_columns:

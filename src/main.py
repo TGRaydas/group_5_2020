@@ -67,6 +67,7 @@ if __name__ == "__main__":
                 mine = Mine(block_model_name)
                 db = database.select_collection(block_model_name)
                 block = mine.find_block(coordinate_x,coordinate_y,coordinate_z, db)
+                print(block)
                 if block:
                     result = block.block_mass()
                     print(result)
