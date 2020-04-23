@@ -69,13 +69,18 @@ if __name__ == "__main__":
                     print(result)
                 else:
                     print("Block not found")
-                
-            elif argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z).keys():
-                block = mine.find_block(coordinate_x,coordinate_y,coordinate_z)
-                result = block.block_grade(argv[5])
-                print(result)
-            else:
-                print("Error on fifth argument")
+        block_model_name = argv[1]
+        coordinate_x = argv[2]
+        coordinate_y = argv[3]
+        coordinate_z = argv[4]
+        mine = Mine(block_model_name)
+        db = database.select_collection(block_model_name)
+        if argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).get_key_values():
+            block = mine.find_block(coordinate_x,coordinate_y,coordinate_z, db)
+            result = block.block_grade(argv[5])
+            print(result)
+        else:
+            print("Error on arguments")
     else:
         print("Not enough arguments")
 

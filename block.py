@@ -12,7 +12,8 @@ class Block():
         for column_index in range(len(self.block_columns)):
             block_json[col_key[column_index]] = col_data[column_index]
         return(block_json)
-
+    def get_key_values(self):
+        return list(self.block_columns)
     def save_in_database(self, blocks):
         block = blocks.find_one({"x":self.block_data[1],"y":self.block_data[2],"z":self.block_data[3]})
         if block != None:
