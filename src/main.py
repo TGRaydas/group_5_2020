@@ -18,14 +18,16 @@ database = dbp.DBProvider()
 if __name__ == "__main__":
     print(argv)
     if len(argv) >= 2:
-        if argv[2] == "-lf":
-            block_model_name = argv[1]
+        block_model_name = argv[2]
+        mine = Mine(block_model_name)
+        db = database.select_collection(block_model_name)
+        if argv[1] == "-lf":  
             print("Insert the column names in the order of the file separated by one space")
             print("Some of this must be 'mass', 'x', 'y', 'z'")
             print("If this is not respected unexpected behaviour may occur.")
             column_raw = input()
-            columns_names = column_raw.split(" ")   #aqui ver el input que entra    
-            path = ""                               #aqui ver el input que entra
+            columns_names = column_raw.split(" ")       
+            path = argv[3]                              
             collection = database.select_collection(block_model_name)
             mine = Mine(block_model_name)
             dbp.load_blocks(block_model_name,block_model_name,columns_names, collection)
@@ -39,11 +41,10 @@ if __name__ == "__main__":
                 collection = database.select_collection(block_model_name)
                 result = mine.mine_blocks(collection)
                 print(result)
-                #aquiid deberia guardarse en una variable y si hay error impirmirlo
             else:
                 print("Error on second argument")
-            if len(argv) >= 7:
-                if argv[6] in options:
+        elif len(argv) >= 7:
+            if argv[6] in options:
                     block_model_name = argv[1]
                     coordinate_x = argv[2]
                     coordinate_y = argv[3]
@@ -57,7 +58,7 @@ if __name__ == "__main__":
                         print(result)
                     else:
                         print("Error on sixth argument")
-        elif argv[5] in options:
+        elif argv in options and len(argv)>5:
             block_model_name = argv[1]
             coordinate_x = argv[2]
             coordinate_y = argv[3]
@@ -71,13 +72,12 @@ if __name__ == "__main__":
                     print(result)
                 else:
                     print("Block not found")
-        block_model_name = argv[1]
-        coordinate_x = argv[2]
-        coordinate_y = argv[3]
-        coordinate_z = argv[4]
-        mine = Mine(block_model_name)
-        db = database.select_collection(block_model_name)
-        if argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).get_key_values():
+        
+        elif len(argv)> 5  and argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).get_key_values():
+            block_model_name = argv[1]
+            coordinate_x = argv[2]
+            coordinate_y = argv[3]
+            coordinate_z = argv[4]
             block = mine.find_block(coordinate_x,coordinate_y,coordinate_z, db)
             result = block.block_attribute(argv[5])
             print(result)
