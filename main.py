@@ -77,7 +77,7 @@ if __name__ == "__main__":
         db = database.select_collection(block_model_name)
         if argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).get_key_values():
             block = mine.find_block(coordinate_x,coordinate_y,coordinate_z, db)
-            result = block.block_grade(argv[5])
+            result = block.block_attribute(argv[5])
             print(result)
         else:
             print("Error on arguments")
