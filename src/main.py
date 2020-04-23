@@ -49,7 +49,7 @@ if __name__ == "__main__":
             print(result)
         else:
             print("Block not found")
-    #
+    #Mass
     elif len(argv) == 6:
         block_model_name = argv[1]
         coordinate_x = argv[2]
