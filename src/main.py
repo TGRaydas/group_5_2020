@@ -74,7 +74,7 @@ if __name__ == "__main__":
                 else:
                     print("Block not found")
         
-        elif len(argv)> 5  and argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).get_key_values():
+        elif len(argv)> 5  and argv[5] in mine.find_block(coordinate_x,coordinate_y,coordinate_z, db).block_columns:
             block_model_name = argv[1]
             coordinate_x = argv[2]
             coordinate_y = argv[3]
