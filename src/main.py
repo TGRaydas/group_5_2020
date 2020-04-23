@@ -58,7 +58,7 @@ if __name__ == "__main__":
                         print(result)
                     else:
                         print("Error on sixth argument")
-        elif argv in options and len(argv)>5:
+        elif argv[5] in options and len(argv)>4:
             block_model_name = argv[1]
             coordinate_x = argv[2]
             coordinate_y = argv[3]
