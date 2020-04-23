@@ -30,9 +30,9 @@ class Block():
             return("The name of mass column was not valid (should be mass)")
         weight_name = input("[1]KG \n[2] TONS")
         if weight_name == "1":
-            return(block_json["mass"])
+            return(block_json[mass_name])
         elif weight_name == "2":
-            return(block_json["mass"]/1000)
+            return(block_json[mass_name]/1000)
         else:
             return("Your option was not valid")
 
