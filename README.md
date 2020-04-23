@@ -24,7 +24,7 @@ If you want to print the stored blocks run "python3 script.py -p"
  
 # TESTS:
  
-   To run the test of the script, run in the command line "python3 test_script.py"
+   To run the test of the script, run in the command line "python3 test_script.py -v"
  
  
 # DEVELOPED BY:
