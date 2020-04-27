@@ -10,7 +10,7 @@ class BlockModel:
     def __init__(self, name):
         self.name = name
 
-    def mine_blocks(self, blocks):
+    def blocks_count(self, blocks):
         blocks_count = blocks.count()
         return blocks_count
 
