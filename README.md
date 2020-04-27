@@ -10,21 +10,29 @@
  
  
 
-# RUNNING THIS PROGRAM:
+# RUN PROGRAM:
  
-   From the command line in the script folder run "python3 script.py -lf [path_of_the_mine_block_model_file]" 
+   From the command line in the script  folder /src/ run "python3 main.py -lf [path_of_the_mine_block_model_file] [name_block_model]" 
    For saving and printing the blocks.
+   From Command Line Interface to get  the Number of Blocks of a stored block model yo will run the next command line :
+	"python3 main.py [block_model_name] num_blocks"
+	From Command Line Interface to get  the Mass in Kg of a stored block model yo will run the next command line:
+	"python3 main.py [block_model_name] [block_x] [block_y] [block_z] mass"
+	From Command Line Interface to get  the Grade in Porcentage ofr each Mineral of a stored block model yo will run the next command line:
+	"python3 main.py [block_model_name] [block_x] [block_y] [block_z] [mineral_name] grade"
+	From Command Line Interface to get  all other attribute of a one block in astored block model yo will run the next command line:
+	"python3 main.py [block_model_name] [block_x] [block_y] [block_z] [attribute_name]"
 
-If you want to print the stored blocks run "python3 script.py -p"
+
  
 # FLAGS:
  
-   -lf [path__mine_block_model_file]: Saves and prints into the command line the blocks specified in the path file.
-   -p: Prints the saved blocks into the command line
+   -lf [path__mine_block_model_file] [name_block_model]: Saves and prints into the command line the blocks specified in the path file.
+
  
 # TESTS:
  
-   To run the test of the script, run in the command line "python3 test_script.py"
+   To run the test of the script, run in the command line in de folder /src/test "python3 test_script.py -v"
  
  
 # DEVELOPED BY:
