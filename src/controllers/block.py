@@ -36,15 +36,15 @@ class Block():
 
     def block_grade(self, mineral_name, mass_name, weight_name, mineral_type_value):
         if mineral_type_value == "1":
-            self.to_json()[mineral_name]
+            return(self.to_json()[mineral_name])
         elif mineral_type_value == "2":
             block_mass_value = self.block_mass(mass_name, weight_name)
-            if block_mass_value == "Your option was not valid":
+            if block_mass_value == "Your option was not valid" or block_mass_value == "The name of mass column was not valid (should be mass)":
                 return False
             return((float(self.to_json()[mineral_name])/(float(block_mass_value)*1000))*100)
         elif mineral_type_value == "3":
             block_mass_value = self.block_mass(mass_name, weight_name)
-            if block_mass_value == "Your option was not valid":
+            if block_mass_value == "Your option was not valid" or block_mass_value == "The name of mass column was not valid (should be mass)":
                 return False
             return(100*(float(self.to_json()[mineral_name])/float(block_mass_value)))
 

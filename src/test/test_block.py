@@ -68,18 +68,25 @@ class TestBlocks(TestCase):
     #Method Tested: block_mass
     #Context: Passing test model blocks
     #Expectation: Should return OK
-    #patch function to simulate inputs with side_effects var
-    #@patch('builtins.input', side_effect=['ton','2'])
     def test_block_mass(self):
         self.assertEqual(test_block2.block_mass('ton','2'),0.08333)
+        self.assertEqual(test_block2.block_mass('ton','1'),83.33)
+        self.assertEqual(test_block2.block_mass('tonn','1'), "The name of mass column was not valid (should be mass)")
+
+
     
     #Method Tested: block_grade
     #Context: Passing test model blocks
     #Expectation: Should return OK
-    #patch function to simulate inputs with side_effects var
-    #@patch('builtins.input', side_effect=['2','ton','2'])
     def test_block_grade(self):
         self.assertEqual(test_block2.block_grade('au','ton','2','2'),0.360014400576023)
+        self.assertEqual(test_block2.block_grade('au','ton','1','2'),0.000360014400576023)
+        self.assertEqual(test_block2.block_grade('au','tonn','2','2'),False)
+        self.assertEqual(test_block2.block_grade('au','ton','2','1'),test_block2.to_json()['au'])
+        self.assertEqual(test_block2.block_grade('au','ton','2','3'), 360.01440057602304)
+
+
+
 
     #Method Tested: get_keys_values
     #Context: Passing test model blocks
