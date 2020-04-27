@@ -23,12 +23,10 @@ class Block():
     def print_block(self):
         print(self.to_json())
 
-    def block_mass(self):
+    def block_mass(self, mass_name, weight_name):
         block_json = self.to_json()
-        mass_name = input("Enter the name of mass column: ")
         if mass_name not in block_json.keys():
             return("The name of mass column was not valid (should be mass)")
-        weight_name = input("[1]KG \n[2]TONS\n")
         if weight_name == "1":
             return(block_json[mass_name])
         elif weight_name == "2":
@@ -36,17 +34,16 @@ class Block():
         else:
             return("Your option was not valid")
 
-    def block_grade(self, mineral_name):
-        option = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG\n')
-        if option == "1":
+    def block_grade(self, mineral_name, mass_name, weight_name, mineral_type_value):
+        if mineral_type_value == "1":
             self.to_json()[mineral_name]
-        elif option == "2":
-            block_mass_value = self.block_mass()
+        elif mineral_type_value == "2":
+            block_mass_value = self.block_mass(mass_name, weight_name)
             if block_mass_value == "Your option was not valid":
                 return False
             return((float(self.to_json()[mineral_name])/(float(block_mass_value)*1000))*100)
-        elif option == "3":
-            block_mass_value = self.block_mass()
+        elif mineral_type_value == "3":
+            block_mass_value = self.block_mass(mass_name, weight_name)
             if block_mass_value == "Your option was not valid":
                 return False
             return(100*(float(self.to_json()[mineral_name])/float(block_mass_value)))

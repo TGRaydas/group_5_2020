@@ -69,17 +69,17 @@ class TestBlocks(TestCase):
     #Context: Passing test model blocks
     #Expectation: Should return OK
     #patch function to simulate inputs with side_effects var
-    @patch('builtins.input', side_effect=['ton','2'])
-    def test_block_mass(self, mock_input):
-        self.assertEqual(test_block2.block_mass(),0.08333)
+    #@patch('builtins.input', side_effect=['ton','2'])
+    def test_block_mass(self):
+        self.assertEqual(test_block2.block_mass('ton','2'),0.08333)
     
     #Method Tested: block_grade
     #Context: Passing test model blocks
     #Expectation: Should return OK
     #patch function to simulate inputs with side_effects var
-    @patch('builtins.input', side_effect=['2','ton','2'])
-    def test_block_grade(self, mock_input):
-        self.assertEqual(test_block2.block_grade('au'),0.360014400576023)
+    #@patch('builtins.input', side_effect=['2','ton','2'])
+    def test_block_grade(self):
+        self.assertEqual(test_block2.block_grade('au','ton','2','2'),0.360014400576023)
 
     #Method Tested: get_keys_values
     #Context: Passing test model blocks

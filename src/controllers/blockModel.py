@@ -6,7 +6,7 @@ from controllers.block import Block
 from utils.dbProvider import DBProvider
 
 
-class Mine:
+class BlockModel:
     def __init__(self, name):
         self.name = name
 
@@ -19,5 +19,3 @@ class Mine:
         if (block != None):
             return Block(block.keys(), block.values())
         return False 
-
-   
