@@ -14,8 +14,6 @@ if __name__ == "__main__":
     if argv[1] == "-lf":
         block_model_name = argv[3]
         print("Insert the column names in the order of the file separated by one space")
-        print("Some of this must be 'mass', 'x', 'y', 'z'")
-        print("If this is not respected unexpected behaviour may occur.")
         column_raw = input()
         columns_names = column_raw.split(" ")       
         path = argv[2]                              
@@ -24,6 +22,7 @@ if __name__ == "__main__":
         database.load_blocks(path,block_model_name,columns_names)
     #Number of mine blocks
     elif argv[2] == "num_blocks":
+        block_model_name = argv[3]
         block_model = BlockModel(block_model_name)
         collection = database.select_collection(block_model_name)
         result = block_model.blocks_count(collection)
@@ -72,6 +71,10 @@ if __name__ == "__main__":
         block = block_model.find_block(coordinate_x,coordinate_y,coordinate_z, collection)
         result = block.block_grade(mineral_name,mass_name, weight_name, mineral_type_value)
         print(result)
+    
+    elif argv[2] =="reblock":
+
+
 
 
 
