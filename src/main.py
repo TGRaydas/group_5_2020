@@ -57,7 +57,7 @@ if __name__ == "__main__":
             print(i)
 
 
-    elif argv[6] == "grade":
+    elif len(argv) > 6 and argv[6] == "grade":
         mineral_type_value = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG\n')
         mass_name = input("Enter the name of mass column: ")
         weight_name = input("[1]KG \n[2]TONS\n")
@@ -85,13 +85,3 @@ if __name__ == "__main__":
         else:
             print(block.block_attribute(argv[5]))
     
-    
-
-
-
-
-
-
-
-
-
