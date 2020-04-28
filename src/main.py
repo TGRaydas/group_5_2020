@@ -22,7 +22,7 @@ if __name__ == "__main__":
         database.load_blocks(path,block_model_name,columns_names)
     #Number of mine blocks
     elif argv[2] == "num_blocks":
-        block_model_name = argv[3]
+        block_model_name = argv[1]
         block_model = BlockModel(block_model_name)
         collection = database.select_collection(block_model_name)
         result = block_model.blocks_count(collection)
@@ -44,18 +44,18 @@ if __name__ == "__main__":
         else:
             print("Block not found")
     #Mass
-    elif len(argv) == 6:
+    elif argv[2] =="reblock":
         block_model_name = argv[1]
-        coordinate_x = argv[2]
-        coordinate_y = argv[3]
-        coordinate_z = argv[4]
+        reblock_x = int(argv[3])
+        reblock_y = int(argv[4])
+        reblock_z = int(argv[5])
         collection = database.select_collection(block_model_name)
         block_model = BlockModel(block_model_name)
-        block = block_model.find_block(coordinate_x,coordinate_y,coordinate_z, collection)
-        if argv[5] not in block.to_json().keys():
-            print("Invalid attribute")
-        else:
-            print(block.block_attribute(argv[5]))
+        reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z)
+        reblock_collection = reblock_model_collection.find({})
+        for i in reblock_collection:
+            print(i)
+
 
     elif argv[6] == "grade":
         mineral_type_value = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG\n')
@@ -71,8 +71,25 @@ if __name__ == "__main__":
         block = block_model.find_block(coordinate_x,coordinate_y,coordinate_z, collection)
         result = block.block_grade(mineral_name,mass_name, weight_name, mineral_type_value)
         print(result)
+
+    elif len(argv) == 6:
+        block_model_name = argv[1]
+        coordinate_x = argv[2]
+        coordinate_y = argv[3]
+        coordinate_z = argv[4]
+        collection = database.select_collection(block_model_name)
+        block_model = BlockModel(block_model_name)
+        block = block_model.find_block(coordinate_x,coordinate_y,coordinate_z, collection)
+        if argv[5] not in block.to_json().keys():
+            print("Invalid attribute")
+        else:
+            print(block.block_attribute(argv[5]))
     
-    elif argv[2] =="reblock":
+    
+
+
+
+
 
 
 

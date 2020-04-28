@@ -4,6 +4,8 @@ import sys
 sys.path.append('..')
 from controllers.block import Block
 from utils.dbProvider import DBProvider
+from pymongo.collation import Collation
+
 
 
 
@@ -25,11 +27,11 @@ class BlockModel:
         position = [-1,-1,-1]
         name_reblock_model = self.name + "_reblock"
         reblock_model = BlockModel(name_reblock_model)
-        reblock_collection = DBProvider.select_collection(name_reblock_model)
+        reblock_collection = DBProvider().select_collection(name_reblock_model)
         max_coords = self.max_coordenates(collection)
-        x_max =max_coords[0]
-        y_max =max_coords[1]
-        z_max =max_coords[2]
+        x_max =int(max_coords[0])
+        y_max =int(max_coords[1])
+        z_max =int(max_coords[2])
         for x in range(0, x_max, rx):
             position = [position[0]+ 1, position[1], position[2]]
             for y in range(0, y_max, ry):
@@ -38,12 +40,14 @@ class BlockModel:
                     position = [position[0], position[1], position[2] + 1]
                     block = resize(collection, x,y,z, rx, ry, rz,position)
                     reblock_collection.insert_one(block)
+        return reblock_collection
 
     
     def max_coordenates(self, collection):
-        max_x = collection.find_one({}).sort({"x":-1})["x"]
-        max_y = collection.find_one({}).sort({"y":-1})["y"]
-        max_z = collection.find_one({}).sort({"z":-1})["z"]
+        max_x = collection.find({}).sort([('x',-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["x"]
+        max_y = collection.find({}).sort([("y",-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["y"]
+        max_z = collection.find({}).sort([("z",-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["z"]
+        print(max_x, max_y, max_z)
         return [max_x, max_y, max_z]
 
 
