@@ -22,3 +22,10 @@ class DBProvider():
             block = Block(columns_names, block_data)
             block.save_in_database(self.collection)
             block.print_block()
+
+    def clear_collection(self, block_model_name):
+        collection = self.db[block_model_name] 
+        collection.drop()
+        self.collection = self.db[block_model_name] 
+        return collection
+
