@@ -43,7 +43,7 @@ if __name__ == "__main__":
             print(result)
         else:
             print("Block not found")
-    #Mass
+    #reblock
     elif argv[2] =="reblock":
         block_model_name = argv[1]
         reblock_x = int(argv[3])
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         for i in reblock_collection:
             print(i)
 
-
+    #grade
     elif len(argv) > 6 and argv[6] == "grade":
         mineral_type_value = input('Mineral weight value came in: \n[1] Percent\n[2] Tons\n[3] KG\n')
         mass_name = input("Enter the name of mass column: ")
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         block = block_model.find_block(coordinate_x,coordinate_y,coordinate_z, collection)
         result = block.block_grade(mineral_name,mass_name, weight_name, mineral_type_value)
         print(result)
-
+    #attribute
     elif len(argv) == 6:
         block_model_name = argv[1]
         coordinate_x = argv[2]

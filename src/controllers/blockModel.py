@@ -32,14 +32,16 @@ class BlockModel:
         x_max =int(max_coords[0])
         y_max =int(max_coords[1])
         z_max =int(max_coords[2])
+        counter = 0
         for x in range(0, x_max, rx):
-            position = [position[0]+ 1, position[1], position[2]]
+            position = [position[0]+ 1, -1, -1]
             for y in range(0, y_max, ry):
-                position = [position[0], position[1] + 1, position[2]]
+                position = [position[0], position[1] + 1, -1]
                 for z in range(0, z_max, rz):
                     position = [position[0], position[1], position[2] + 1]
-                    block = resize(collection, x,y,z, rx, ry, rz,position)
+                    block = resize(collection, x,y,z, rx, ry, rz,position, counter)
                     reblock_collection.insert_one(block)
+                    counter += 1
         return reblock_collection
 
     
@@ -51,9 +53,9 @@ class BlockModel:
         return [max_x, max_y, max_z]
 
 
-def resize(collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_z, position):
-    l = []
-    id_block = position[0] + position[1] + position[2]
+def resize(collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_z, position, counter):
+    l = [] # lista de blocks a combinar
+    id_block = counter
     new_block = {"id": id_block, "x": position[0], "y": position[1], "z": position[2] }
     for x in range(x_start, x_start+reblock_x):
     	for y in range(y_start, y_start+reblock_y):
@@ -62,8 +64,9 @@ def resize(collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_
     			if block not in l and block != None:
     				l.append(block)
     #combinar los blocks 
-    #tiene que retornar el block en json
+    #tiene que retornar el block en json con los attr sumados
     return new_block
+
 
 
 
