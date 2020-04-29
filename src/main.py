@@ -51,10 +51,14 @@ if __name__ == "__main__":
         reblock_z = int(argv[5])
         collection = database.select_collection(block_model_name)
         block_model = BlockModel(block_model_name)
-        reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z)
+        print("Insert the attributes types printed bellow separeted by space")
+        print(' '.join(map(str, block_model.reblock_model_attributes(collection))))
+        attributes_types = input('').split()
+        mass_attribute = input('Insert the name of mass attribute\n')
+        reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z, attributes_types, mass_attribute)
         reblock_collection = reblock_model_collection.find({})
-        for i in reblock_collection:
-            print(i)
+        for block in reblock_collection:
+            print(block)
 
     #grade
     elif len(argv) > 6 and argv[6] == "grade":
