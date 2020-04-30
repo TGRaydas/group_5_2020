@@ -52,7 +52,9 @@ if __name__ == "__main__":
         collection = database.select_collection(block_model_name)
         block_model = BlockModel(block_model_name)
         print("Insert the attributes types printed bellow separeted by space")
+        print("Types:\n\tCategorical: cat\n\tProportional: prop\n\tContinue: con")
         print(' '.join(map(str, block_model.reblock_model_attributes(collection))))
+
         attributes_types = input('').split()
         mass_attribute = input('Insert the name of mass attribute\n')
         reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z, attributes_types, mass_attribute)

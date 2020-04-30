@@ -1,10 +1,11 @@
 import pymongo
+from pymongo.collation import Collation
 import json
 import sys
 sys.path.append('..')
 from controllers.block import Block
 from utils.dbProvider import DBProvider
-from pymongo.collation import Collation
+
 
 
 
@@ -32,6 +33,7 @@ class BlockModel:
     def reblock(self,collection, rx, ry, rz, attributes_types, mass_attribute):
         position = [-1,-1,-1]
         name_reblock_model = self.name + "_reblock"
+        self.reblock_model_attributes(collection)
         reblock_model = BlockModel(name_reblock_model)
         DBProvider().clear_collection(name_reblock_model)
         reblock_collection = DBProvider().select_collection(name_reblock_model)
@@ -97,20 +99,18 @@ class BlockModel:
                     block = collection.find_one({"x":str(x), "y" : str(y), "z" : str(z)})
                     if block not in all_blocks and block != None:
                         all_blocks.append(block)
-        offset = 5
+
         for attr_index in range(len(attributes_types)):
             attr = self.model_keys[attr_index]
-            if attributes_types[attr_index] == "categorical":
+            if attributes_types[attr_index] == "cat":
                 new_block[attr] = self.categorical_attributes(all_blocks, attr)
-            elif attributes_types[attr_index] == "proportional":
+            elif attributes_types[attr_index] == "prop":
                 new_block[attr] = self.proportinal_attributes(all_blocks, attr, mass_attribute)
-            elif attributes_types[attr_index] == "continue":
+            elif attributes_types[attr_index] == "con":
                 new_block[attr] = self.continue_attributes(all_blocks, attr)
-
-        #combinar los blocks 
-        #tiene que retornar el block en json con los attr sumados
+            if new_block[attr] != 0:
+                print(new_block)
         return new_block
-
 
 
 
