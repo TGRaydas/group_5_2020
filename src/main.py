@@ -28,7 +28,7 @@ if __name__ == "__main__":
         result = block_model.blocks_count(collection)
         print(result)
     #Mass value of block
-    elif argv[5] == "mass":
+    elif len(argv) > 5 and argv[5] == "mass":
         mass_name = input("Enter the name of mass column: ")
         weight_name = input("[1]KG \n[2]TONS\n")
         block_model_name = argv[1]
