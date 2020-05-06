@@ -37,7 +37,7 @@ class BlockModel:
         reblock_model = BlockModel(name_reblock_model)
         DBProvider().clear_collection(name_reblock_model)
         reblock_collection = DBProvider().select_collection(name_reblock_model)
-        max_coords = self.max_coordenates(collection)
+        max_coords = self.max_coordinates(collection)
         x_max =int(max_coords[0])
         y_max =int(max_coords[1])
         z_max =int(max_coords[2])
@@ -48,12 +48,12 @@ class BlockModel:
                 position = [position[0], position[1] + 1, -1]
                 for z in range(0, z_max, rz):
                     position = [position[0], position[1], position[2] + 1]
-                    block = self.resize(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
+                    block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
         return reblock_collection
 
-    def continue_attributes(self, blocks, attribute):
+    def continues_attributes(self, blocks, attribute):
         value = 0
         if len(blocks) == 0:
             return value
@@ -82,14 +82,14 @@ class BlockModel:
         return max(set(attributes), key = attributes.count) 
 
 
-    def max_coordenates(self, collection):
+    def max_coordinates(self, collection):
         max_x = collection.find({}).sort([('x',-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["x"]
         max_y = collection.find({}).sort([("y",-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["y"]
         max_z = collection.find({}).sort([("z",-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["z"]
         return [max_x, max_y, max_z]
 
 
-    def resize(self, collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_z, position, counter, attributes_types, mass_attribute):
+    def create_reblocked_block(self, collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_z, position, counter, attributes_types, mass_attribute):
         all_blocks = [] # lista de blocks a combinar
         id_block = counter
         new_block = {"id": id_block, "x": position[0], "y": position[1], "z": position[2] }
@@ -107,7 +107,7 @@ class BlockModel:
             elif attributes_types[attr_index] == "prop":
                 new_block[attr] = self.proportinal_attributes(all_blocks, attr, mass_attribute)
             elif attributes_types[attr_index] == "con":
-                new_block[attr] = self.continue_attributes(all_blocks, attr)
+                new_block[attr] = self.continues_attributes(all_blocks, attr)
             if new_block[attr] != 0:
                 print(new_block)
         return new_block

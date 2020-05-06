@@ -52,8 +52,5 @@ class Block():
         if attribute not in self.block_columns:
             return("Not valid attribute")
         return_attributes = {}
-        # for key in self.to_json().keys():
-        #     if key != attribute and key != "_id":
-        #         return_attributes[key] = self.to_json()[key]
         return_attributes[attribute] = self.to_json()[attribute]
         return(return_attributes)
