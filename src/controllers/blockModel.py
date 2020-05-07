@@ -47,7 +47,7 @@ class BlockModel:
             for y in range(0, y_max, ry):
                 position = [position[0], position[1] + 1, -1]
                 for z in range(0, z_max, rz):
-                    position = [position[0], position[1], position[2] + 1]
+                    position = [str(position[0]), str(position[1]), str(position[2] + 1)]
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
@@ -91,6 +91,8 @@ class BlockModel:
 
     def create_reblocked_block(self, collection, x_start, y_start, z_start ,reblock_x, reblock_y, reblock_z, position, counter, attributes_types, mass_attribute):
         all_blocks = [] # lista de blocks a combinar
+        block = collection.find({})[0]
+        self.model_keys = list(block.keys())[5:]
         id_block = counter
         new_block = {"id": id_block, "x": position[0], "y": position[1], "z": position[2] }
         for x in range(x_start, x_start+reblock_x):
@@ -103,13 +105,13 @@ class BlockModel:
         for attr_index in range(len(attributes_types)):
             attr = self.model_keys[attr_index]
             if attributes_types[attr_index] == "cat":
-                new_block[attr] = self.categorical_attributes(all_blocks, attr)
+                new_block[attr] = str(self.categorical_attributes(all_blocks, attr))
             elif attributes_types[attr_index] == "prop":
-                new_block[attr] = self.proportinal_attributes(all_blocks, attr, mass_attribute)
+                new_block[attr] = str(self.proportinal_attributes(all_blocks, attr, mass_attribute))
             elif attributes_types[attr_index] == "con":
-                new_block[attr] = self.continues_attributes(all_blocks, attr)
+                new_block[attr] = str(self.continues_attributes(all_blocks, attr))
             if new_block[attr] != 0:
-                print(new_block)
+                pass
         return new_block
 
 

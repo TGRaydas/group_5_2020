@@ -10,7 +10,7 @@ class Block():
         col_key = list(self.block_columns)
         col_data = list(self.block_data)
         for column_index in range(len(self.block_columns)):
-            block_json[col_key[column_index]] = col_data[column_index]
+            block_json[col_key[column_index]] = str(col_data[column_index])
         return(block_json)
     def get_key_values(self):
         return list(self.block_columns)
@@ -52,5 +52,8 @@ class Block():
         if attribute not in self.block_columns:
             return("Not valid attribute")
         return_attributes = {}
+        for key in self.to_json().keys():
+            if key != attribute and key != "_id":
+                return_attributes[key] = self.to_json()[key]
         return_attributes[attribute] = self.to_json()[attribute]
         return(return_attributes)
