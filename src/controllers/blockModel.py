@@ -47,11 +47,11 @@ class BlockModel(Publisher):
         z_max =int(max_coords[2])
         counter = 0
         for x in range(0, x_max, rx):
-            position = [position[0]+ 1, -1, -1]
+            position = [int(position[0])+ 1, -1, -1]
             for y in range(0, y_max, ry):
-                position = [position[0], position[1] + 1, -1]
+                position = [position[0], int(position[1]) + 1, -1]
                 for z in range(0, z_max, rz):
-                    position = [str(position[0]), str(position[1]), str(position[2] + 1)]
+                    position = [str(position[0]), str(position[1]), str(int(position[2]) + 1)]
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
