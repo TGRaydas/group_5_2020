@@ -1,9 +1,12 @@
 import json
-
-class Block():
+from controllers.publisher import Publisher
+class Block(Publisher):
     def __init__(self, block_columns, block_data):
+        Publisher.__init__(self)
         self.block_columns = block_columns
         self.block_data = block_data
+    def handle(self, event):
+        pass
 
     def to_json(self):
         block_json = {}
@@ -12,8 +15,10 @@ class Block():
         for column_index in range(len(self.block_columns)):
             block_json[col_key[column_index]] = str(col_data[column_index])
         return(block_json)
+
     def get_key_values(self):
         return list(self.block_columns)
+
     def save_in_database(self, collections):
         block = collections.find_one({"x":self.block_data[1],"y":self.block_data[2],"z":self.block_data[3]})
         if block != None:
@@ -35,6 +40,7 @@ class Block():
             return("Your option was not valid")
 
     def block_grade(self, mineral_name, mass_name, weight_name, mineral_type_value):
+        self.notify("block-grade")
         if mineral_type_value == "1":
             return(self.to_json()[mineral_name])
         elif mineral_type_value == "2":

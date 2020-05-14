@@ -5,22 +5,26 @@ import sys
 sys.path.append('..')
 from controllers.block import Block
 from utils.dbProvider import DBProvider
+from controllers.publisher import Publisher
 
 
 
-
-
-class BlockModel:
+class BlockModel(Publisher):
     def __init__(self, name):
+        Publisher.__init__(self)
         self.name = name
         self.model_keys = None
+    def handle(self, event):
+        pass
 
     def blocks_count(self, blocks):
         blocks_count = blocks.count()
+        self.notify("blocks-count")
         return blocks_count
 
     def find_block(self, x, y, z, collection):
         block = collection.find_one({"x":x, "y" : y, "z" : z})
+        self.notify("find-block")
         if (block != None):
             return Block(block.keys(), block.values())
         return False 
@@ -51,6 +55,7 @@ class BlockModel:
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
+        self.notify("reblocked-collection")
         return reblock_collection
 
     def continues_attributes(self, blocks, attribute):
