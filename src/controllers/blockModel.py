@@ -1,6 +1,7 @@
 import pymongo
 from pymongo.collation import Collation
 import json
+import math
 import sys
 sys.path.append('..')
 from controllers.block import Block
@@ -55,7 +56,7 @@ class BlockModel(Publisher):
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
-                    self.notify("reblocked blocks: " + str(counter))
+                    self.notify("reblocked blocks: " + str(int(counter/math.ceil(y_max*x_max*z_max/(rx*ry*rz))*100)))
         self.notify("reblocked collection")
         return reblock_collection
 
