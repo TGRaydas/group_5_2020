@@ -55,7 +55,8 @@ class BlockModel(Publisher):
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
-        self.notify("reblocked-collection")
+                    self.notify("reblocked blocks: " + str(counter))
+        self.notify("reblocked collection")
         return reblock_collection
 
     def continues_attributes(self, blocks, attribute):

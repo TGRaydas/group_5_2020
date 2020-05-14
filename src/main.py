@@ -10,7 +10,10 @@ database = dbp.DBProvider()
 
 class App(Subscriber):   
     def handle(self, event):
-        print(event)
+        if event == "reblocked collection":
+            print(event)
+        else:
+            print(event, end='\r')
     def run(self):
     #Load blocks from a file giving the path into database
         if argv[1] == "-lf":
@@ -64,8 +67,8 @@ class App(Subscriber):
             block_model.add_subscriber(self)
             reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z, attributes_types, mass_attribute)
             reblock_collection = reblock_model_collection.find({})
-            for block in reblock_collection:
-                print(block)
+            # for block in reblock_collection:
+            #     print(block)
 
         #grade
         elif len(argv) > 6 and argv[6] == "grade":
