@@ -42,16 +42,18 @@ class TestBlockModels(TestCase):
     #Method Tested: save_in_database
     #Context: Passing test model blocks
     #Expectation: Should return OK
-    def test_find_block(self):
+    def test_find_block_valid(self):
         block = collection.find_one({"x":'38', "y" : '28', "z" : '67'})
         test_block = Block(block.keys(), block.values())
         self.assertEqual(test_block.to_json()["id"], test_block_model.find_block('38','28','67', collection).to_json()["id"] )
-
+    
+    def test_find_block_invalid(self):
+        self.assertEqual(test_block_model.find_block('96','28','67', collection), False )
     #Method Tested: max_coordinates
     #Context: passing test model blocks
     #should return ok
     def test_max_coordinates(self):
-        new_coordinates = test_block_model.max_coordenates(collection)
+        new_coordinates = test_block_model.max_coordinates(collection)
         self.assertEqual(new_coordinates, ['39', '28' ,'67'])
 
     #Method Tested: continue_attributes
@@ -60,7 +62,7 @@ class TestBlockModels(TestCase):
     def test_continue_attributes(self):
         attribute = "ton"
         bks = [test_block1.to_json(), test_block2.to_json()]
-        new_value = test_block_model.continue_attributes(bks, attribute)
+        new_value = test_block_model.continues_attributes(bks, attribute)
         self.assertEqual(new_value, 104.16)
 
     #Method Tested: categorical_attributes
@@ -86,22 +88,20 @@ class TestBlockModels(TestCase):
     #should return ok
     #proving first and last block of a new model block
     def test_reblock(self):
-        new_attribute = ["continue", "proportional"]
+        new_attribute = ["con", "prop"]
         new_collection = test_block_model.reblock(collection, test_rx, test_ry, test_rz, new_attribute, "ton")
         first_block = new_collection.find_one({"x": 0, "y" : 0, "z" : 0}) 
         last_block = new_collection.find_one({"x": 3, "y" : 2, "z" : 6}) 
         self.assertTrue(first_block, last_block)
     
-    #Method Tested: resize
+    #Method Tested: create_reblocked_block
     #Context: passing test model blocks
     #should return ok
     #risize return a json of a new block with new parameters
-    def test_resize(self):
-        new_attribute = ["continue", "proportional"]
-        test_resize = test_block_model.resize(collection,30,20,60,10,10,10,[3,2,6],83,new_attribute,"ton")
+    def test_create_reblocked_block(self):
+        new_attribute = ["con", "prop"]
+        test_resize = test_block_model.create_reblocked_block(collection,30,20,60,10,10,10,[3,2,6],83,new_attribute,"ton")
         self.assertEqual(test_resize, {'id': 83, 'x': 3, 'y': 2, 'z': 6, 'ton': 208.32, 'au': 0.2800019201228879})
-
-
 
 
 if __name__ == "__main__":
