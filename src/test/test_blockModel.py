@@ -72,7 +72,7 @@ class TestBlockModels(TestCase):
         attribute = "ton"
         bks = [test_block1.to_json(), test_block2.to_json()]
         new_value = test_block_model.categorical_attributes(bks, attribute)
-        self.assertEqual(new_value, 83.33)
+        self.assertEqual(new_value, str(83.33))
 
     #Method Tested: proporcional_attributes
     #Context: passing test model blocks
@@ -102,6 +102,20 @@ class TestBlockModels(TestCase):
         new_attribute = ["con", "prop"]
         test_resize = test_block_model.create_reblocked_block(collection,30,20,60,10,10,10,[3,2,6],83,new_attribute,"ton")
         self.assertEqual(test_resize, {'id': 83, 'x': 3, 'y': 2, 'z': 6, 'ton': 208.32, 'au': 0.2800019201228879})
+
+    def test_calculate_attribute(self):
+        bks = [test_block1.to_json(), test_block2.to_json()]
+        res1 = test_block_model.calculate_attibute(bks, 'au', "ton", 'prop')
+        res2 = test_block_model.calculate_attibute(bks, 'ton', "ton", 'con')
+        res3 = test_block_model.calculate_attibute(bks, 'au', "ton", 'cat')
+        if res1 == ((83.33*0.3 + 20.83*0.2)/104.16):
+            if res2 == 104.16:
+                self.assertEqual(res3, str(83.33))
+            else:
+                self.assertEqual(res2, 104.16)
+        else:
+            self.assertEqual(res1, (83.33*0.3 + 20.83*0.2)/104.16)
+
 
 
 if __name__ == "__main__":
