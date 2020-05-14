@@ -5,6 +5,7 @@ import sys
 sys.path.append('..')
 from controllers.block import Block
 from utils.dbProvider import DBProvider
+from controllers.attribute_strategy_factory import AttributeStrategyFactory
 
 
 
@@ -43,11 +44,11 @@ class BlockModel:
         z_max =int(max_coords[2])
         counter = 0
         for x in range(0, x_max, rx):
-            position = [position[0]+ 1, -1, -1]
+            position = [int(position[0])+ 1, -1, -1]
             for y in range(0, y_max, ry):
-                position = [position[0], position[1] + 1, -1]
+                position = [position[0], int(position[1]) + 1, -1]
                 for z in range(0, z_max, rz):
-                    position = [str(position[0]), str(position[1]), str(position[2] + 1)]
+                    position = [str(position[0]), str(position[1]), str(int(position[2]) + 1)]
                     block = self.create_reblocked_block(collection, x, y, z, rx, ry, rz,position, counter, attributes_types, mass_attribute)
                     reblock_collection.insert_one(block)
                     counter += 1
@@ -81,6 +82,9 @@ class BlockModel:
             attributes.append(block[attribute])
         return max(set(attributes), key = attributes.count) 
 
+    def calculate_attribute(self, blocks, attribute, mass_attribute, type_attribute):
+        return AttributeStrategyFactory().strategy(blocks, attribute, mass_attribute, type_attribute).calculate(blocks, attribute, mass_attribute)
+
 
     def max_coordinates(self, collection):
         max_x = collection.find({}).sort([('x',-1)]).collation(Collation(locale='fr_CA',numericOrdering= True))[0]["x"]
@@ -104,12 +108,7 @@ class BlockModel:
 
         for attr_index in range(len(attributes_types)):
             attr = self.model_keys[attr_index]
-            if attributes_types[attr_index] == "cat":
-                new_block[attr] = str(self.categorical_attributes(all_blocks, attr))
-            elif attributes_types[attr_index] == "prop":
-                new_block[attr] = str(self.proportinal_attributes(all_blocks, attr, mass_attribute))
-            elif attributes_types[attr_index] == "con":
-                new_block[attr] = str(self.continues_attributes(all_blocks, attr))
+            new_block[attr] = self.calculate_attribute(all_blocks, attr, mass_attribute, attributes_types[attr_index])
             if new_block[attr] != 0:
                 pass
         return new_block
