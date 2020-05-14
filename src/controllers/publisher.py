@@ -7,6 +7,6 @@ class Publisher:
 	def remove_subscriber(self, subscriber):
 		self.subscribers.remove(subscriber)
 	def notify(self, event):
-		print(len(self.subscribers))
+		#print(len(self.subscribers))
 		for subscriber in self.subscribers:
 			subscriber.handle(event)
