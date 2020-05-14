@@ -1,36 +1,14 @@
 import sys
 sys.path.append('..')
-from controllers.block import Block
 from unittest.mock import patch
 from unittest import TestCase
 import unittest
 from io import StringIO
 from utils.dbProvider import DBProvider
+from block_test_cases_const import block1_value, block2_value, test_block1, test_block2, json_test, json_test_attr, block_columns
 
 database = DBProvider()
 collection = database.select_collection("test")
-block_columns = ["id","x", "y","z", "ton", "au"]
-block1_value = [0, 36, 286, 67, 20.83, 0.2]
-block2_value = [1, 37, 286, 67, 83.33, 0.3]
-test_block1 = Block(block_columns,block1_value)
-test_block2 = Block(block_columns, block2_value)
-json_test = {
-					"id": 0,
-					 "x": 36, 
-                     "y": 286,
-					 "z": 67, 
-					 "ton": 20.83, 
-					 "au": 0.2
-				} 
-json_test_attr = {
-					"id": 1,
-					 "x": 37, 
-                     "y": 286, 
-					 "ton": 83.33, 
-					 "au": 0.3
-				} 
-
-
 
 #Test Class Block methods
 class TestBlocks(TestCase):
@@ -64,13 +42,14 @@ class TestBlocks(TestCase):
     def test_block_attribute(self):
          json_without_attr = test_block2.block_attribute('z')
          self.assertEqual(json_without_attr, json_test_attr)
-
     #Method Tested: block_mass
     #Context: Passing test model blocks
     #Expectation: Should return OK
-    def test_block_mass(self):
+    def test_block_mass_case_ton(self):
         self.assertEqual(test_block2.block_mass('ton','2'),0.08333)
+    def test_block_mass_case_kg(self):    
         self.assertEqual(test_block2.block_mass('ton','1'),83.33)
+    def test_block_mass_case_invalid_attr(self):    
         self.assertEqual(test_block2.block_mass('tonn','1'), "The name of mass column was not valid (should be mass)")
 
 
@@ -78,14 +57,16 @@ class TestBlocks(TestCase):
     #Method Tested: block_grade
     #Context: Passing test model blocks
     #Expectation: Should return OK
-    def test_block_grade(self):
+    def test_block_grade_case_tons_with_tons_mineral_type(self):
         self.assertEqual(test_block2.block_grade('au','ton','2','2'),0.360014400576023)
+    def test_block_grade_case_kg_with_tons_mineral_type(self):
         self.assertEqual(test_block2.block_grade('au','ton','1','2'),0.000360014400576023)
+    def test_block_grade_case_invalid_attribute_mass(self):
         self.assertEqual(test_block2.block_grade('au','tonn','2','2'),False)
+    def test_block_grade_case_tons_and_percents_mineral_type(self):
         self.assertEqual(test_block2.block_grade('au','ton','2','1'),test_block2.to_json()['au'])
+    def test_block_grade_case_tons_with_kg_mineral_type(self):        
         self.assertEqual(test_block2.block_grade('au','ton','2','3'), 360.01440057602304)
-
-
 
 
     #Method Tested: get_keys_values
@@ -93,9 +74,6 @@ class TestBlocks(TestCase):
     #Expectation: Should return OK
     def test_get_key_values(self):
         self.assertEqual(test_block1.get_key_values(), block_columns)
-
-   
-        
     
 
 if __name__ == "__main__":
