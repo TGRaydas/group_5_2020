@@ -1,13 +1,31 @@
 import sys
+import http.server
+import socketserver
+from flask import Flask, json
+from flask_cors import CORS
 sys.path.append('..')
 import utils.dbProvider as dbp
 from controllers.block import Block
 from controllers.blockModel import BlockModel
 
+from http.server import BaseHTTPRequestHandler
+from urllib import parse
 
 argv = sys.argv
 database = dbp.DBProvider()
 
+api = Flask(__name__)
+CORS(api)
+@api.route('/api/block_models/', methods=['GET'])
+def get_blocks_models():
+  return json.dumps(database.get_blocks_names())
+@api.route('/api/block_models/<block_model>/blocks/', methods=['GET'])
+def get_blocks_of_model(block_model):
+    block_model = BlockModel(block_model).get_blocks(database)
+    return json.dumps(block_model)
+
+if __name__ == '__main__':
+    api.run()
 
 if __name__ == "__main__":
     #Load blocks from a file giving the path into database
