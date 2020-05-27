@@ -1,21 +1,31 @@
 import json
+from controllers.block_flyweight_factory import BlockFlyweightFactory
+
 
 class Block():
     def __init__(self, block_columns, block_data):
-        self.block_columns = block_columns
-        self.block_data = block_data
+        self.flyweight = BlockFlyweightFactory().create_flyweight(block_columns, block_data)
+
+    def __eq__(self, other):
+        for index in range(len(flyweight.block_columns)):
+            if flyweight.block_columns[index] != other.flyweight.block_columns[index]:
+                return False
+        for index in range(len(flyweight.block_data)):
+            if flyweight.block_data[index] != other.flyweight.block_data[index]:
+                return False
+        return True
 
     def to_json(self):
         block_json = {}
-        col_key = list(self.block_columns)
-        col_data = list(self.block_data)
-        for column_index in range(len(self.block_columns)):
-            block_json[col_key[column_index]] = col_data[column_index]
+        col_key = list(self.flyweight.block_columns)
+        col_data = list(self.flyweight.block_data)
+        for column_index in range(len(self.flyweight.block_columns)):
+            block_json[col_key[column_index]] = str(col_data[column_index])
         return(block_json)
     def get_key_values(self):
-        return list(self.block_columns)
+        return list(self.flyweight.block_columns)
     def save_in_database(self, collections):
-        block = collections.find_one({"x":self.block_data[1],"y":self.block_data[2],"z":self.block_data[3]})
+        block = collections.find_one({"x":self.flyweight.block_data[1],"y":self.flyweight.block_data[2],"z":self.flyweight.block_data[3]})
         if block != None:
             return
         collections.insert_one(self.to_json())
@@ -49,10 +59,11 @@ class Block():
             return(100*(float(self.to_json()[mineral_name])/float(block_mass_value)))
 
     def block_attribute(self, attribute):
-        if attribute not in self.block_columns:
+        if attribute not in self.flyweight.block_columns:
             return("Not valid attribute")
         return_attributes = {}
         for key in self.to_json().keys():
             if key != attribute and key != "_id":
                 return_attributes[key] = self.to_json()[key]
+        return_attributes[attribute] = self.to_json()[attribute]
         return(return_attributes)
