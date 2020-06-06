@@ -3,14 +3,21 @@
  
  # REQUIREMENTS:
  
-  Python version: Python >= 3.x.x  
+   Python version: Python >= 3.x.x  
    Pytohn library: PyMongo >= 3.1.x
+   pip3 install Flask
+   pip3 install Flask-Cors
    Mine Block Model File
  
  
+# RUN API:
+   From the command line in the script  folder /src/ run "python3 main.py"
+   The api run in  "http://127.0.0.1:5000/"
+
  
 
 # RUN PROGRAM:
+
    
    From the command line in the script  folder /src/ run "python3 main.py -lf [path_of_the_mine_block_model_file] [name_block_model]" 
 

@@ -1,5 +1,6 @@
 import pymongo
 import sys
+import json
 sys.path.append('..')
 from controllers.block import Block
 
@@ -28,4 +29,11 @@ class DBProvider():
         collection.drop()
         self.collection = self.db[block_model_name] 
         return collection
+
+    def get_blocks_names(self):
+        collections = []
+        for collection in self.db.list_collection_names():
+            collections.append({"name": collection})
+        return collections
+
 

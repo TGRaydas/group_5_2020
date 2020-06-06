@@ -15,6 +15,15 @@ class BlockModel:
         self.name = name
         self.model_keys = None
 
+    def get_blocks(self, db):
+        collection = db.select_collection(self.name)
+        blocks = []
+        for block in collection.find({}):
+            if '_id' in block:
+                del block['_id']
+            blocks.append(block)
+        return blocks
+
     def blocks_count(self, blocks):
         blocks_count = blocks.count()
         return blocks_count
