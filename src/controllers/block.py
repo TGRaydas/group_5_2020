@@ -7,11 +7,11 @@ class Block():
         self.flyweight = BlockFlyweightFactory().create_flyweight(block_columns, block_data)
 
     def __eq__(self, other):
-        for index in range(len(flyweight.block_columns)):
-            if flyweight.block_columns[index] != other.flyweight.block_columns[index]:
+        for index in range(len(self.flyweight.block_columns)):
+            if self.flyweight.block_columns[index] != other.flyweight.block_columns[index]:
                 return False
-        for index in range(len(flyweight.block_data)):
-            if flyweight.block_data[index] != other.flyweight.block_data[index]:
+        for index in range(len(self.flyweight.block_data)):
+            if self.flyweight.block_data[index] != other.flyweight.block_data[index]:
                 return False
         return True
 
