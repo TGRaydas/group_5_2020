@@ -19,14 +19,15 @@ CORS(api)
 @api.route('/api/block_models/', methods=['GET'])
 def get_blocks_models():
   return json.dumps(database.get_blocks_names())
-@api.route('/api/block_models/<block_model>/blocks/', methods=['GET', 'POST'])
-def get_blocks_of_model(block_model):
+@api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
+def get_blocks_of_model(block_model_name):
+    print(request.method)
     if request.method == 'GET':
-        block_model = BlockModel(block_model).get_blocks(database)
+        block_model = BlockModel(block_model_name).get_blocks(database)
+        print(block_model)
         return json.dumps(block_model)
     elif request.method == 'POST':
         content = request.get_json()
-        block_model_name = content['name']
         column_raw = content['columns']
         columns_names = column_raw.split(" ")
         data = content['data']
