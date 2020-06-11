@@ -1,7 +1,7 @@
 import sys
 import http.server
 import socketserver
-from flask import Flask, json
+from flask import Flask, json, request
 from flask_cors import CORS
 sys.path.append('..')
 import utils.dbProvider as dbp
@@ -23,6 +23,17 @@ def get_blocks_models():
 def get_blocks_of_model(block_model):
     block_model = BlockModel(block_model).get_blocks(database)
     return json.dumps(block_model)
+@api.route('/api/block_models/new', methods=['POST'])
+def create_blocks_of_model():
+    content = request.get_json()
+    block_model_name = content['name']
+    column_raw = content['columns']
+    columns_names = column_raw.split(" ")
+    path = content['path']
+    collection = database.select_collection(block_model_name)
+    block_model = BlockModel(block_model_name)
+    database.load_blocks(path,block_model_name,columns_names)
+    return json.dumps(content)
 
 if __name__ == '__main__':
     api.run()
