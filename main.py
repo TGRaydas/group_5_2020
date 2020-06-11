@@ -14,18 +14,25 @@ from urllib import parse
 argv = sys.argv
 database = dbp.DBProvider()
 
+feature_flag = False
+
 api = Flask(__name__)
 CORS(api)
 @api.route('/api/block_models/', methods=['GET'])
 def get_blocks_models():
-  return json.dumps(database.get_blocks_names())
+    if feature_flag:
+        return json.dumps({"block_models":database.get_blocks_names()})
+    else:
+        return json.dumps(database.get_blocks_names())
 @api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
 def get_blocks_of_model(block_model_name):
     print(request.method)
     if request.method == 'GET':
         block_model = BlockModel(block_model_name).get_blocks(database)
-        print(block_model)
-        return json.dumps(block_model)
+        if feature_flag:
+            return json.dumps({"block_model":{"blocks":block_model}})
+        else:
+            return json.dumps(block_model)
     elif request.method == 'POST':
         content = request.get_json()
         column_raw = content['columns']
