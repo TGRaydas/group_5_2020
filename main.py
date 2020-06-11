@@ -7,7 +7,7 @@ sys.path.append('..')
 import utils.dbProvider as dbp
 from controllers.block import Block
 from controllers.blockModel import BlockModel
-
+import werkzeug
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
 
@@ -18,12 +18,21 @@ feature_flag = False
 
 api = Flask(__name__)
 CORS(api)
+@api.errorhandler(werkzeug.exceptions.BadRequest)
+def handle_bad_request(e):
+    return 'bad request!', 400
+@api.errorhandler(Exception)
+def handle_exception(e):
+    # pass through HTTP errors
+    if isinstance(e, werkzeug.exceptions.HTTPException):
+        return e
 @api.route('/api/block_models/', methods=['GET'])
 def get_blocks_models():
     if feature_flag:
         return json.dumps({"block_models":database.get_blocks_names()})
     else:
         return json.dumps(database.get_blocks_names())
+
 @api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
 def get_blocks_of_model(block_model_name):
     print(request.method)
