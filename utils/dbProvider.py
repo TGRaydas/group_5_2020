@@ -7,7 +7,7 @@ from controllers.block import Block
 
 class DBProvider():
     def __init__(self):
-        self.client = pymongo.MongoClient("mongodb://localhost:27017/")
+        self.client = pymongo.MongoClient("mongodb://190.162.2.76:27017/")
         self.db = self.client["mines"]
         self.collection = None
     
