@@ -22,7 +22,6 @@ class BlockModel:
             if '_id' in block:
                 del block['_id']
             blocks.append(block)
-            print(block)
         return blocks
 
     def blocks_count(self, blocks):
