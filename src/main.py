@@ -36,7 +36,7 @@ def create_blocks_of_model():
     return json.dumps(content)
 
 if __name__ == '__main__':
-    api.run()
+    api.run(host='0.0.0.0')
 
 if __name__ == "__main__":
     #Load blocks from a file giving the path into database
