@@ -14,26 +14,52 @@ from urllib import parse
 argv = sys.argv
 database = dbp.DBProvider()
 
+feature_flag = False
+
 api = Flask(__name__)
 CORS(api)
 @api.route('/api/block_models/', methods=['GET'])
 def get_blocks_models():
-  return json.dumps(database.get_blocks_names())
-@api.route('/api/block_models/<block_model>/blocks/', methods=['GET'])
-def get_blocks_of_model(block_model):
-    block_model = BlockModel(block_model).get_blocks(database)
-    return json.dumps(block_model)
-@api.route('/api/block_models/new', methods=['POST'])
-def create_blocks_of_model():
+    if feature_flag:
+        return json.dumps({"block_models":database.get_blocks_names()})
+    else:
+        return json.dumps(database.get_blocks_names())
+@api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
+def get_blocks_of_model(block_model_name):
+    print(request.method)
+    if request.method == 'GET':
+        block_model = BlockModel(block_model_name).get_blocks(database)
+        if feature_flag:
+            return json.dumps({"block_model":{"blocks":block_model}})
+        else:
+            return json.dumps(block_model)
+    elif request.method == 'POST':
+        content = request.get_json()
+        column_raw = content['columns']
+        columns_names = column_raw.split(" ")
+        data = content['data']
+        collection = database.select_collection(block_model_name)
+        block_model = BlockModel(block_model_name)
+        database.load_blocks(data,block_model_name,columns_names)
+        return json.dumps(content)
+    
+
+@api.route('/api/block_models/<block_model_name>/reblock/', methods=['GET'])
+def reblock_model(block_model_name):
     content = request.get_json()
-    block_model_name = content['name']
-    column_raw = content['columns']
-    columns_names = column_raw.split(" ")
-    path = content['path']
+    reblock_x = int(content['reblock_x'])
+    reblock_y = int(content['reblock_y'])
+    reblock_z = int(content['reblock_z'])
+    attributes_types = content['attributes_types'].split()
     collection = database.select_collection(block_model_name)
+    mass_attribute = content['mass_attribute']
     block_model = BlockModel(block_model_name)
-    database.load_blocks(path,block_model_name,columns_names)
-    return json.dumps(content)
+    reblock_model_collection = block_model.reblock(collection, reblock_x, reblock_y, reblock_z, attributes_types, mass_attribute)
+    reblock_collection = reblock_model_collection.find({})
+    return_json = []
+    for block in reblock_collection:
+        return_json.append(block)
+    return json.dumps({"status": "reblocked"})
 
 if __name__ == '__main__':
     api.run(host='0.0.0.0')

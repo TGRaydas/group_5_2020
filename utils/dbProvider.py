@@ -16,8 +16,8 @@ class DBProvider():
         self.collection = collection
         return collection
 
-    def load_blocks(self, path, name_data_set, columns_names):
-        blocks_file = open(path, "r")
+    def load_blocks(self, data, name_data_set, columns_names):
+        blocks_file = data
         for block_row in blocks_file:
             block_data = block_row.strip().split(" ")
             block = Block(columns_names, block_data)
