@@ -26,13 +26,14 @@ def get_blocks_of_model(block_model):
 @api.route('/api/block_models/new', methods=['POST'])
 def create_blocks_of_model():
     content = request.get_json()
+    print(content)
     block_model_name = content['name']
     column_raw = content['columns']
     columns_names = column_raw.split(" ")
-    path = content['path']
+    data = content['data']
     collection = database.select_collection(block_model_name)
     block_model = BlockModel(block_model_name)
-    database.load_blocks(path,block_model_name,columns_names)
+    database.load_blocks(data,block_model_name,columns_names)
     return json.dumps(content)
 
 if __name__ == '__main__':
