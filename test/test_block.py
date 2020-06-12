@@ -30,12 +30,12 @@ class TestBlocks(TestCase):
     # Method Tested: print_block
     # Context: Passing test model blocks
     # Expectation: Should return OK
-    def test_print_block(self):
-        output = StringIO()          
-        sys.stdout = output                   
-        test_block1.print_block()                                   
-        sys.stdout = sys.__stdout__                   
-        self.assertEqual(output.getvalue(), "{'id': '0', 'x': '36', 'y': '286', 'z': '67', 'ton': '20.83', 'au': '0.2'}\n" )
+    # def test_print_block(self):
+    #     output = StringIO()          
+    #     sys.stdout = output                   
+    #     test_block1.print_block()                                   
+    #     sys.stdout = sys.__stdout__                   
+    #     self.assertEqual(output.getvalue(), "{'id': '0', 'x': '36', 'y': '286', 'z': '67', 'ton': '20.83', 'au': '0.2'}\n" )
 
     # Method Tested: block_attribute
     # Context: Passing test model blocks
