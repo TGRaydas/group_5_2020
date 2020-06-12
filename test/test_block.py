@@ -23,7 +23,7 @@ class TestBlocks(TestCase):
     #Expectation: Should return OK
     def test_save_in_database(self):
         test_block1.save_in_database(collection)
-        block = collection.find_one({"x":test_block1.block_data[1],"y":test_block1.block_data[2],"z":test_block1.block_data[3]})
+        block = collection.find_one({"x": str(test_block1.flyweight.block_data[1]),"y": str(test_block1.flyweight.block_data[2]),"z": str(test_block1.flyweight.block_data[3])})
         self.assertTrue(block, "the Block is save in database")
 
     #Method Tested: print_block
@@ -34,7 +34,7 @@ class TestBlocks(TestCase):
         sys.stdout = output                   
         test_block1.print_block()                                   
         sys.stdout = sys.__stdout__                   
-        self.assertEqual(output.getvalue(), "{'id': 0, 'x': 36, 'y': 286, 'z': 67, 'ton': 20.83, 'au': 0.2}\n" )
+        self.assertEqual(output.getvalue(), "{'id': '0', 'x': '36', 'y': '286', 'z': '67', 'ton': '20.83', 'au': '0.2'}\n" )
 
     #Method Tested: block_attribute
     #Context: Passing test model blocks
@@ -48,7 +48,7 @@ class TestBlocks(TestCase):
     def test_block_mass_case_ton(self):
         self.assertEqual(test_block2.block_mass('ton','2'),0.08333)
     def test_block_mass_case_kg(self):    
-        self.assertEqual(test_block2.block_mass('ton','1'),83.33)
+        self.assertEqual(test_block2.block_mass('ton','1'),'83.33')
     def test_block_mass_case_invalid_attr(self):    
         self.assertEqual(test_block2.block_mass('tonn','1'), "The name of mass column was not valid (should be mass)")
 
