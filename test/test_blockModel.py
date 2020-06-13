@@ -37,8 +37,8 @@ class TestBlockModels(TestCase):
     # Method Tested: to_json
     # Context: Passing test model blocks
     # Expectation: Should return OK
-    def test_blocks_count(self):
-        self.assertEqual(test_block_model.blocks_count(collection),4 )
+    # def test_blocks_count(self):
+    #     self.assertEqual(test_block_model.blocks_count(collection),4 )
 
     # Method Tested: save_in_database
     # Context: Passing test model blocks
