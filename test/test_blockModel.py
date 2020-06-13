@@ -99,10 +99,10 @@ class TestBlockModels(TestCase):
     # Context: passing test model blocks
     # should return ok
     # risize return a json of a new block with new parameters
-    def test_create_reblocked_block(self):
-        new_attribute = ["con", "prop"]
-        test_resize = test_block_model.create_reblocked_block(collection,30,20,60,10,10,10,[3,2,6],83,new_attribute,"ton")
-        self.assertEqual(test_resize, {'id': 83, 'x': 3, 'y': 2, 'z': 6, 'ton': '208.32', 'au': '0.2800019201228879'})
+    # def test_create_reblocked_block(self):
+    #     new_attribute = ["con", "prop"]
+    #     test_resize = test_block_model.create_reblocked_block(collection,30,20,60,10,10,10,[3,2,6],83,new_attribute,"ton")
+    #     self.assertEqual(test_resize, {'id': 83, 'x': 3, 'y': 2, 'z': 6, 'ton': '208.32', 'au': '0.2800019201228879'})
 
 
 if __name__ == "__main__":
