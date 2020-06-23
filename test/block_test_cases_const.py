@@ -7,18 +7,18 @@ test_block1 = Block(block_columns,block1_value)
 test_block2 = Block(block_columns, block2_value)
 
 json_test = {
-					"id": 0,
-					 "x": 36, 
-                     "y": 286,
-					 "z": 67, 
-					 "ton": 20.83, 
-					 "au": 0.2
+					"id": '0',
+					 "x": '36', 
+                     "y": '286',
+					 "z": '67', 
+					 "ton": '20.83', 
+					 "au": '0.2'
 				} 
 json_test_attr = {
-					"id": 1,
-					 "x": 37, 
-                     "y": 286, 
-                     "z": 67,
-					 "ton": 83.33, 
-					 "au": 0.3
+					"id": '1',
+					 "x": '37', 
+                     "y": '286', 
+                     "z": '67',
+					 "ton": '83.33', 
+					 "au": '0.3'
 				} 
