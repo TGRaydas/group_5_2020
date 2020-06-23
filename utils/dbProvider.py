@@ -36,4 +36,22 @@ class DBProvider():
             collections.append({"name": collection})
         return collections
 
+    def get_span_id(self):
+        print("aqui", self.db["span"].count())
+        if self.db["span"].count() == 0:
+           span_id = 0
+        else:
+            span_id = self.db["span"].find().sort({"_id":-1}).limit(1)
+        print(span_id)
+        return span_id
+
+
+    def create_span_id(self):
+        id = self.get_span_id()
+        if id == None:
+            id = 0
+        span_id =self.span.insert_one({"span_id": id + 1})
+        return span_id
+
+
 

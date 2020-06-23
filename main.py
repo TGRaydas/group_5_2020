@@ -14,6 +14,9 @@ from urllib import parse
 
 argv = sys.argv
 database = dbp.DBProvider()
+api_trace = "https://gentle-coast-69723.herokuapp.com/api/apps/a0d8b0dd5a0556e788da64cb4c559586/traces/"
+dev_app_id = "a0d8b0dd5a0556e788da64cb4c559586"
+prod_app_id = "11f3aee68e09d3d6a5600bcfa8bc2229"
 
 
 api = Flask(__name__)
@@ -34,6 +37,7 @@ def get_blocks_models():
         return json.dumps({"block_models":database.get_blocks_names()})
     else:
         return json.dumps(database.get_blocks_names())
+    
 
 @api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
 def get_blocks_of_model(block_model_name):
@@ -42,6 +46,14 @@ def get_blocks_of_model(block_model_name):
         block_model = BlockModel(block_model_name).get_blocks(database)
         r = requests.get('https://dry-brushlands-69779.herokuapp.com/api/feature_flags/')
         content = request.get_json()
+        trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "blocks_requested",
+                "event_data": block_model_name,
+            }
+        }
+        requests.post(api_trace, json=trace_json)
         if bool(r.json()['restful_response']):
             return json.dumps({"block_model":{"blocks":block_model}})
         else:
@@ -54,10 +66,18 @@ def get_blocks_of_model(block_model_name):
         collection = database.select_collection(block_model_name)
         block_model = BlockModel(block_model_name)
         database.load_blocks(data,block_model_name,columns_names)
+        trace_json = {
+            "trace": {
+                "span_id": database.create_span_id(),
+                "event_name": "block_model_loaded",
+                "event_data": block_model_name,
+            }
+        }
+        requests.post(api_trace, json=trace_json)
         return json.dumps(content)
     
 
-@api.route('/api/block_models/<block_model_name>/reblock/', methods=['GET'])
+@api.route('/api/block_models/<block_model_name>/reblock/', methods=['POST'])
 def reblock_model(block_model_name):
     content = request.get_json()
     reblock_x = int(content['reblock_x'])
@@ -72,10 +92,25 @@ def reblock_model(block_model_name):
     return_json = []
     for block in reblock_collection:
         return_json.append(block)
+    trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "blocks_requested",
+                "event_data": block_model_name + "_reblock",
+            }
+        }
+    requests.post(api_trace, json=trace_json)
     return json.dumps({"status": "reblocked"})
+
+
+
 
 if __name__ == '__main__':
     api.run(host='0.0.0.0')
+
+
+
+
 
 if __name__ == "__main__":
     #Load blocks from a file giving the path into database
