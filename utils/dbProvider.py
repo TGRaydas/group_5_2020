@@ -48,9 +48,7 @@ class DBProvider():
 
     def create_span_id(self):
         id = self.get_span_id()
-        if id == None:
-            id = 0
-        span_id =self.span.insert_one({"span_id": id + 1})
+        span_id =self.db["span"].insert_one({"span_id": id + 1})
         return span_id
 
 
