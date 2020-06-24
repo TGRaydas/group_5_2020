@@ -3,6 +3,7 @@ import sys
 import json
 sys.path.append('..')
 from controllers.block import Block
+from bson.json_util import dumps
 
 
 class DBProvider():
@@ -41,14 +42,16 @@ class DBProvider():
         if self.db["span"].count() == 0:
            span_id = 0
         else:
-            span_id = self.db["span"].find().sort({"_id":-1}).limit(1)
-        print(span_id)
+            span = self.db["span"].find().sort([("_id",-1)]).limit(1)
+            span_id = list(span)[0]["span_id"]
         return span_id
 
 
     def create_span_id(self):
         id = self.get_span_id()
-        span_id =self.db["span"].insert_one({"span_id": id + 1})
+        collection = self.db["span"]
+        span_id = id +1
+        span = collection.insert({"span_id": span_id})
         return span_id
 
 
