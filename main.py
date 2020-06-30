@@ -37,7 +37,27 @@ def get_blocks_models():
         return json.dumps({"block_models":database.get_blocks_names()})
     else:
         return json.dumps(database.get_blocks_names())
-    
+
+@api.route('/api/block_models/<block_model_name>', methods=['POST'])
+def load_blocks_of_model(block_model_name):
+    content = request.get_json()
+    column_raw = content['columns']
+    columns_names = column_raw.split(" ")
+    data = content['data']
+    attributes_types = content['attributes_types'].split()
+    mass_attribute = content['mass_attribute']
+    collection = database.select_collection(block_model_name)
+    block_model = BlockModel(block_model_name)
+    database.load_blocks(data,block_model_name,columns_names)
+    trace_json = {
+        "trace": {
+            "span_id": database.create_span_id(),
+            "event_name": "block_model_loaded",
+            "event_data": block_model_name,
+        }
+    }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps(content)
 
 @api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
 def get_blocks_of_model(block_model_name):
@@ -58,23 +78,7 @@ def get_blocks_of_model(block_model_name):
             return json.dumps({"block_model":{"blocks":block_model}})
         else:
             return json.dumps(block_model)
-    elif request.method == 'POST':
-        content = request.get_json()
-        column_raw = content['columns']
-        columns_names = column_raw.split(" ")
-        data = content['data']
-        collection = database.select_collection(block_model_name)
-        block_model = BlockModel(block_model_name)
-        database.load_blocks(data,block_model_name,columns_names)
-        trace_json = {
-            "trace": {
-                "span_id": database.create_span_id(),
-                "event_name": "block_model_loaded",
-                "event_data": block_model_name,
-            }
-        }
-        requests.post(api_trace, json=trace_json)
-        return json.dumps(content)
+ 
     
 @api.route('/api/block_models/<block_model_name>/blocks/<index>', methods=['GET'])
 def get_block_info(block_model_name,index):
@@ -83,7 +87,7 @@ def get_block_info(block_model_name,index):
         block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
         r = requests.get('https://dry-brushlands-69779.herokuapp.com/api/feature_flags/')
         content = request.get_json()
-        block = block_by_index.to_json()
+        block = block_by_index.info_json()
         trace_json = {
             "trace": {
                 "span_id": database.get_span_id(),
@@ -94,7 +98,7 @@ def get_block_info(block_model_name,index):
         }
         requests.post(api_trace, json=trace_json)
         if bool(r.json()['restful_response']):
-            return json.dumps({"blocks":block})
+            return json.dumps({"block":block})
         else:
             return json.dumps(block)
     
