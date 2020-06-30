@@ -76,6 +76,28 @@ def get_blocks_of_model(block_model_name):
         requests.post(api_trace, json=trace_json)
         return json.dumps(content)
     
+@api.route('/api/block_models/<block_model_name>/blocks/<index>', methods=['GET'])
+def get_block_info(block_model_name,index):
+    if request.method == 'GET':
+        collection = database.select_collection(block_model_name)
+        block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
+        r = requests.get('https://dry-brushlands-69779.herokuapp.com/api/feature_flags/')
+        content = request.get_json()
+        block = block_by_index.to_json()
+        trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "blocks_info_requested",
+                "event_data": block["x"] + "," + 
+                block["y"] + "," +  block["z"],
+            }
+        }
+        requests.post(api_trace, json=trace_json)
+        if bool(r.json()['restful_response']):
+            return json.dumps({"blocks":block})
+        else:
+            return json.dumps(block)
+    
 
 @api.route('/api/block_models/<block_model_name>/reblock/', methods=['POST'])
 def reblock_model(block_model_name):

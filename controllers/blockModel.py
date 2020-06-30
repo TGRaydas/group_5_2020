@@ -34,6 +34,12 @@ class BlockModel:
             return Block(block.keys(), block.values())
         return False 
     
+    def find_block_by_index(self, index, collection):
+        block = collection.find_one({"id": index})
+        if (block != None):
+            return Block(block.keys(), block.values())
+        return False 
+    
     def reblock_model_attributes(self, collection):
         block = collection.find({})[0]
         self.model_keys = list(block.keys())[5:]
