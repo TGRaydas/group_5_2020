@@ -19,6 +19,7 @@ class BlockModel:
         collection = db.select_collection(self.name)
         blocks = []
         for block in collection.find({}):
+            block['index'] = block.pop('id')
             if '_id' in block:
                 del block['_id']
             blocks.append(block)
