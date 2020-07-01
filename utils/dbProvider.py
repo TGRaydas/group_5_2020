@@ -36,6 +36,8 @@ class DBProvider():
     def get_blocks_names(self):
         collections = []
         for collection in self.db.list_collection_names():
+            if "span" in collection or "_prec" in collection or "attr" in collection:
+                continue
             collections.append({"name": collection})
         return collections
 
