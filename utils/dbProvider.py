@@ -53,18 +53,20 @@ class DBProvider():
 
 
     def create_span_id(self):
-        id = self.get_span_id()
+        _id = self.get_span_id()
         collection = self.db["span"]
-        span_id = id +1
+        span_id = _id +1
         span = collection.insert({"span_id": span_id})
         return span_id
 
     def load_prec(self, prec_list, block_model_name):
         collection = self.db[block_model_name + '_prec']
+        models = []
         for prec in prec_list:
             prec = prec.strip().split(" ")
             model_json = {'id': prec[0], 'count': prec[1], 'blocks': prec[2:]}
-            collection.insert_one(model_json)
+            models.append(model_json)    
+        collection.insert(models)
         return True
 
 
