@@ -22,10 +22,12 @@ class DBProvider():
         model_json = {"model":name_data_set, "attr": attributes_types, "mass": mass_attribute}
         collection = self.db['models_attr']
         collection.insert_one(model_json)
+        blocks = []
         for block_row in blocks_file:
             block_data = block_row.strip().split(" ")
             block = Block(columns_names, block_data)
-            block.save_in_database(self.collection)
+            blocks.append(block.to_json())
+        self.collection.insert(blocks)
 
     def clear_collection(self, block_model_name):
         collection = self.db[block_model_name] 
