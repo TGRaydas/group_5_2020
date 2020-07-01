@@ -143,7 +143,7 @@ def load_prec(block_model_name):
     requests.post(api_trace, json=trace_json)
     return json.dumps({"status": "loaded_prec"})
 
-@api.route('/api/block_models/<block_model_name>/blocks/<index>/extract', methods=['POST'])
+@api.route('/api/block_models/<block_model_name>/blocks/<index>/extract/', methods=['POST'])
 def delete_prec(block_model_name, index):
     content = request.get_json()
     block_model = BlockModel(block_model_name)
