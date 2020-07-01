@@ -37,7 +37,27 @@ def get_blocks_models():
         return json.dumps({"block_models":database.get_blocks_names()})
     else:
         return json.dumps(database.get_blocks_names())
-    
+
+@api.route('/api/block_models/<block_model_name>/', methods=['POST'])
+def load_blocks_of_model(block_model_name):
+    content = request.get_json()
+    column_raw = content['columns']
+    columns_names = column_raw.split(" ")
+    data = content['data']
+    attributes_types = content['attributes_types'].split()
+    mass_attribute = content['mass_attribute']
+    collection = database.select_collection(block_model_name)
+    block_model = BlockModel(block_model_name)
+    database.load_blocks(data,block_model_name,columns_names, attributes_types, mass_attribute)
+    trace_json = {
+        "trace": {
+            "span_id": database.create_span_id(),
+            "event_name": "block_model_loaded",
+            "event_data": block_model_name,
+        }
+    }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps(content)
 
 @api.route('/api/block_models/<block_model_name>/blocks/', methods=['GET', 'POST'])
 def get_blocks_of_model(block_model_name):
@@ -58,23 +78,29 @@ def get_blocks_of_model(block_model_name):
             return json.dumps({"block_model":{"blocks":block_model}})
         else:
             return json.dumps(block_model)
-    elif request.method == 'POST':
-        content = request.get_json()
-        column_raw = content['columns']
-        columns_names = column_raw.split(" ")
-        data = content['data']
+ 
+    
+@api.route('/api/block_models/<block_model_name>/blocks/<index>', methods=['GET'])
+def get_block_info(block_model_name,index):
+    if request.method == 'GET':
         collection = database.select_collection(block_model_name)
-        block_model = BlockModel(block_model_name)
-        database.load_blocks(data,block_model_name,columns_names)
+        block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
+        r = requests.get('https://dry-brushlands-69779.herokuapp.com/api/feature_flags/')
+        content = request.get_json()
+        block = block_by_index.info_json(block_model_name, database)
         trace_json = {
             "trace": {
-                "span_id": database.create_span_id(),
-                "event_name": "block_model_loaded",
-                "event_data": block_model_name,
+                "span_id": database.get_span_id(),
+                "event_name": "blocks_info_requested",
+                "event_data": block["x"] + "," + 
+                block["y"] + "," +  block["z"],
             }
         }
         requests.post(api_trace, json=trace_json)
-        return json.dumps(content)
+        if bool(r.json()['restful_response']):
+            return json.dumps({"block":block})
+        else:
+            return json.dumps(block)
     
 
 @api.route('/api/block_models/<block_model_name>/reblock/', methods=['POST'])
@@ -102,7 +128,35 @@ def reblock_model(block_model_name):
     requests.post(api_trace, json=trace_json)
     return json.dumps({"status": "reblocked"})
 
+@api.route('/api/block_models/<block_model_name>/prec/', methods=['POST'])
+def load_prec(block_model_name):
+    content = request.get_json()
+    prec_list = content['prec_list']
+    database.load_prec(prec_list, block_model_name)
+    trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "block_model_precedences_loaded",
+                "event_data": block_model_name + "_prec",
+            }
+        }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps({"status": "loaded_prec"})
 
+@api.route('/api/block_models/<block_model_name>/blocks/<index>/extract', methods=['POST'])
+def delete_prec(block_model_name, index):
+    content = request.get_json()
+    block_model = BlockModel(block_model_name)
+    deleted = block_model.delete_block_prec(index)
+    trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "block_extracted",
+                "event_data": "_prec",
+            }
+        }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps({"blocks": deleted})
 
 
 if __name__ == '__main__':

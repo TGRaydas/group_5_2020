@@ -14,7 +14,46 @@
    From the command line in the script  folder /src/ run "python3 main.py"
    The api run in  "http://127.0.0.1:5000/"
 
+# API DOCUMENTATION:
+   The following structure is an example of what is required to get all a blocks in block model in endpoint GET: api/block_models/
+   return:
+
+   {
+      "block_models":
+                  [{"name": "kd"}, {"name": "newman_reblock"}, {"name": "zuck_small_reblock"}, {"name": "test"}, {"name": "TEST"}, {"name": "newman"}, {"name": "test_reblock"}, {"name": "zuck_small"}]
+   }
+
+
+   The following structure is an example of what is required to get all a blocks in block model in endpoint GET: api/block_models/<block_model_name>/blocks
+   return:
+
+   {
+      "block_model": 
+               {"blocks": 
+               [{"au": "0.2", "id": "4", "ton": "20.83", "x": "38", "y": "28", "z": "67"}, {"au": "0.3", "id": "5", "ton": "83.33", "x": "39", "y": "28", "z": "67"}, {"au": "0.2", "id": "0", "ton": "20.83", "x": "36", "y": "28", "z": "67"}, {"au": "0.3", "id": "1", "ton": "83.33", "x": "37", "y": "28", "z": "67"}]
+               }
+   }
  
+
+   The following structure is an example of what is required to insert a block model in endpoint POST: api/block_models/<block_model_name>/blocks
+
+   {
+      "columns": "id x y z cost value rock_tonnes ore_tonnes",
+      "data": ["0 1 1 1 0.23 4.34 5 0.07634","1 1 1 2 0.001 1.34 7 0.034"]
+   }  
+
+
+   The following structure is an example of what is required to reblock a block model in endpoint POST: /api/block_models/<block_model_name>/reblock
+   {
+      "reblock_x": "2",
+      "reblock_y": "2",
+      "reblock_z": "2",
+      "attributes_types": "prop prop con prop",
+      "mass_attribute": "rock_tonnes"
+   }
+
+
+
 
 # RUN PROGRAM:
 

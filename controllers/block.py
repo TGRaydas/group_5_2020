@@ -22,8 +22,42 @@ class Block():
         for column_index in range(len(self.flyweight.block_columns)):
             block_json[col_key[column_index]] = str(col_data[column_index])
         return(block_json)
+
+    def block_column_attr(self, block_model_name, database):
+        collection = database.select_collection('models_attr')
+        attr = collection.find_one({'model': block_model_name})
+        print(block_model_name)
+        return attr
+
+    def info_json(self, block_model_name, database):
+        block_json = {"grades": {}}
+        col_key = list(self.flyweight.block_columns)
+        col_data = list(self.flyweight.block_data)
+        attr = self.block_column_attr(block_model_name, database)
+        mass_value = 0
+        for column_index in range(len(self.flyweight.block_columns)):
+            if col_key[column_index] == attr['mass']:
+                mass_value = float(col_data[column_index])
+        print(attr['attr'],(self.flyweight.block_columns))
+        for column_index in range(len(self.flyweight.block_columns)):
+            if col_key[column_index] == "id":
+                block_json["index"] = str(col_data[column_index])
+            elif col_key[column_index] == "_id":
+                continue
+            elif col_key[column_index] == "x" or col_key[column_index] == "y" or col_key[column_index] == "z":
+                block_json[col_key[column_index]] = str(col_data[column_index])
+            elif col_key[column_index] == attr['mass']:
+                block_json['mass'] = str(col_data[column_index])
+            else:
+                if attr['attr'][column_index - 1] == 'con':
+                    block_json["grades"][col_key[column_index]] = (float(col_data[column_index])/mass_value)*100
+                elif attr['attr'][column_index - 1] == 'prop':
+                    block_json["grades"][col_key[column_index]] = float(col_data[column_index])
+        return(block_json)
+
     def get_key_values(self):
         return list(self.flyweight.block_columns)
+
     def save_in_database(self, collections):
         block = collections.find_one({"x":self.flyweight.block_data[1],"y":self.flyweight.block_data[2],"z":self.flyweight.block_data[3]})
         if block != None:
