@@ -123,9 +123,11 @@ class TestBlockModels(TestCase):
 # should return ok
     def test_delete_block_prec(self):
         delete_test_list = []
-        assert_list = [{'index':"0"},{'index':"1"}]
+        assert_list = [{'index':"1"},{'index':"0"}]
         deleted = test_block_model.delete_block_prec("0", delete_test_list)
-        self.assertEqual(deleted, None )
+        deleted_false = test_block_model.delete_block_prec("6", delete_test_list)
+        self.assertEqual(deleted, assert_list )
+        self.assertEqual(deleted_false, False)
 
 
 if __name__ == "__main__":

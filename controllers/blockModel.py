@@ -45,18 +45,23 @@ class BlockModel:
         block = collection.find({})[0]
         self.model_keys = list(block.keys())[5:]
         return(list(block.keys())[5:])
+    
 
     def delete_block_prec(self, prec_index, deleted):
         prec = DBProvider().select_collection(self.name + '_prec').find_one({'id': prec_index})
+        if prec == None:
+            return False
         if prec['count'] == '0':
             DBProvider().select_collection(self.name).delete_one({'id': prec_index})
-            return deleted.append({'index':prec_index})
+            deleted.append({'index':prec_index})
+            return  deleted
         for i in range(int(prec['count'])):
             if DBProvider().select_collection(self.name).find_one({'id': prec['blocks'][i]}) == None:
                 continue
             self.delete_block_prec(prec['blocks'][i], deleted)
         DBProvider().select_collection(self.name).delete_one({'id': prec_index})
-        return deleted.append({'index':prec_index})
+        deleted.append({'index':prec_index})
+        return  deleted
 
 
 
