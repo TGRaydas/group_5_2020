@@ -146,12 +146,12 @@ def load_prec(block_model_name):
 @api.route('/api/block_models/<block_model_name>/blocks/<index>/extract/', methods=['POST'])
 def delete_prec(block_model_name, index):
     content = request.get_json()
-    block_model = BlockModel(block_model_name)
-    delete_list = []
-    deleted = block_model.delete_block_prec(index, delete_list)
     collection = database.select_collection(block_model_name)
     block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
     block = block_by_index.info_json(block_model_name, database)
+    block_model = BlockModel(block_model_name)
+    delete_list = []
+    deleted = block_model.delete_block_prec(index, delete_list)
     trace_json = {
             "trace": {
                 "span_id": database.get_span_id(),
