@@ -73,7 +73,7 @@ class TestBlockModels(TestCase):
         attribute = "ton"
         bks = [test_block1.to_json(), test_block2.to_json()]
         new_value = test_block_model.categorical_attributes(bks, attribute)
-        self.assertEqual(new_value, '83.33')
+        self.assertEqual(new_value, '20.83')
 
     # Method Tested: proporcional_attributes
     # Context: passing test model blocks
