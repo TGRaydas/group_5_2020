@@ -45,6 +45,20 @@ class BlockModel:
         self.model_keys = list(block.keys())[5:]
         return(list(block.keys())[5:])
 
+    def delete_block_prec(self, prec_index, deleted):
+        prec = DBProvider().select_collection(self.name + '_prec').find_one({'id': prec_index})
+        if prec['count'] == '0':
+            DBProvider().select_collection(self.name).delete_one({'id': prec_index})
+            return deleted.append({'index':prec_index})
+        for i in range(int(prec['count'])):
+            if DBProvider().select_collection(self.name).find_one({'id': prec['blocks'][i]}) == None:
+                continue
+            self.delete_block_prec(prec['blocks'][i], deleted)
+        DBProvider().select_collection(self.name).delete_one({'id': prec_index})
+        return deleted.append({'index':prec_index})
+
+
+
     def reblock(self,collection, rx, ry, rz, attributes_types, mass_attribute):
         position = [-1,-1,-1]
         name_reblock_model = self.name + "_reblock"

@@ -38,7 +38,7 @@ def get_blocks_models():
     else:
         return json.dumps(database.get_blocks_names())
 
-@api.route('/api/block_models/<block_model_name>', methods=['POST'])
+@api.route('/api/block_models/<block_model_name>/', methods=['POST'])
 def load_blocks_of_model(block_model_name):
     content = request.get_json()
     column_raw = content['columns']
@@ -48,7 +48,7 @@ def load_blocks_of_model(block_model_name):
     mass_attribute = content['mass_attribute']
     collection = database.select_collection(block_model_name)
     block_model = BlockModel(block_model_name)
-    database.load_blocks(data,block_model_name,columns_names)
+    database.load_blocks(data,block_model_name,columns_names, attributes_types, mass_attribute)
     trace_json = {
         "trace": {
             "span_id": database.create_span_id(),
@@ -87,7 +87,7 @@ def get_block_info(block_model_name,index):
         block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
         r = requests.get('https://dry-brushlands-69779.herokuapp.com/api/feature_flags/')
         content = request.get_json()
-        block = block_by_index.info_json()
+        block = block_by_index.info_json(block_model_name, database)
         trace_json = {
             "trace": {
                 "span_id": database.get_span_id(),
@@ -128,7 +128,35 @@ def reblock_model(block_model_name):
     requests.post(api_trace, json=trace_json)
     return json.dumps({"status": "reblocked"})
 
+@api.route('/api/block_models/<block_model_name>/prec/', methods=['POST'])
+def load_prec(block_model_name):
+    content = request.get_json()
+    prec_list = content['prec_list']
+    database.load_prec(prec_list, block_model_name)
+    trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "block_model_precedences_loaded",
+                "event_data": block_model_name + "_prec",
+            }
+        }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps({"status": "loaded_prec"})
 
+@api.route('/api/block_models/<block_model_name>/blocks/<index>/extract', methods=['POST'])
+def delete_prec(block_model_name, index):
+    content = request.get_json()
+    block_model = BlockModel(block_model_name)
+    deleted = block_model.delete_block_prec(index)
+    trace_json = {
+            "trace": {
+                "span_id": database.get_span_id(),
+                "event_name": "block_extracted",
+                "event_data": "_prec",
+            }
+        }
+    requests.post(api_trace, json=trace_json)
+    return json.dumps({"blocks": deleted})
 
 
 if __name__ == '__main__':
