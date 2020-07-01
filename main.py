@@ -148,11 +148,15 @@ def delete_prec(block_model_name, index):
     content = request.get_json()
     block_model = BlockModel(block_model_name)
     deleted = block_model.delete_block_prec(index)
+    collection = database.select_collection(block_model_name)
+    block_by_index = BlockModel(block_model_name).find_block_by_index(index, collection)
+    block = block_by_index.info_json(block_model_name, database)
     trace_json = {
             "trace": {
                 "span_id": database.get_span_id(),
                 "event_name": "block_extracted",
-                "event_data": "_prec",
+                "event_data": block["x"] + "," + 
+                block["y"] + "," +  block["z"],
             }
         }
     requests.post(api_trace, json=trace_json)

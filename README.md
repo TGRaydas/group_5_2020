@@ -33,6 +33,23 @@
                [{"au": "0.2", "id": "4", "ton": "20.83", "x": "38", "y": "28", "z": "67"}, {"au": "0.3", "id": "5", "ton": "83.33", "x": "39", "y": "28", "z": "67"}, {"au": "0.2", "id": "0", "ton": "20.83", "x": "36", "y": "28", "z": "67"}, {"au": "0.3", "id": "1", "ton": "83.33", "x": "37", "y": "28", "z": "67"}]
                }
    }
+
+   The following structure is an example of what is required to get a block info in block model in endpoint GET: api/block_models/<block_model_name>/blocks/<index>
+   return:
+
+   {
+   "block" : {
+         "index": <index>,
+         "x": <x>,
+         "y": <y>,
+         "z": <z>,
+         "grades": { 
+         "au" : <au grade in %>,
+         "cu" : <cu grade in %>,
+         },
+         "mass" : <mass in kg>
+      }
+   }
  
 
    The following structure is an example of what is required to insert a block model in endpoint POST: api/block_models/<block_model_name>/blocks
@@ -50,6 +67,17 @@
       "reblock_z": "2",
       "attributes_types": "prop prop con prop",
       "mass_attribute": "rock_tonnes"
+   }
+
+   The following structure is an example of what is required to load a precedence of  a block model in endpoint POST: /api/block_models/<block_model_name>/prec
+   {
+      "prec_list": ["0 1 34", "1 3 2 0 45", "2 0"]
+   }
+
+   the following format is an example of the Extract function for that model block and returns the blocks that should be extracted, in  endpoint POST: 
+   api/block_models/<name>/blocks/<index>/extract
+   { 
+      "blocks": [{"index":123},{"index":124},{"index":125}] 
    }
 
 
